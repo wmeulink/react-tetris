@@ -1,12 +1,6 @@
 ### Tetris App
 
-This Application is a Tetris game for desktop only. It was built from freecodecamp tutorial, using ReactJS & flexbox/css grid.
-
-You can view this game at the following: 
-
-react-tetris-whitney.herokuapp.com
-
-
+This Application is a Tetris game for desktop only.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
