@@ -1,0 +1,80 @@
+.about-me-header {
+    width: 100%;
+    height: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-me-name {
+    width: 100%;
+    height: 40px;
+    font-family: Arial;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.about-body-title {
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: 30px;
+    width: 100%;
+    display: flex;
+    margin-top:10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.about-me-body-column1 {
+    width: 45%;
+    flex-direction: column;
+    height: 400px;
+    display: flex;
+    background-color: #E3D0E3;
+    border: 2px solid #E3D0E3;
+    border-radius: 5%;
+    margin-left: 5%;
+}
+
+.body-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.about-me-body-column2 {
+    width: 48%;
+    height: 400px;
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.image1 {
+    max-width: 50%;
+    height: 400px;
+    border-radius: 5%;
+}
+
+.image2 {
+    max-width: 60%;
+    border-radius: 5%;
+    height: 100%;
+}
+
+.about-me-body-text {
+    margin-top: 20px;
+    margin-left: 10%;
+    font-size: 13px;
+    margin-right: 10%;
+    font-family:'Courier New', Courier, monospace;
+}
