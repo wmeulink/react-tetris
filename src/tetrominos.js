@@ -1,5 +1,5 @@
 export const TETROMINOS = {
-  0: { shape: [[0]], color: "0, 0, 0" },
+  0: { shape: [[0]], color: "0, 0, 0" }, // empty cell
   I: {
     shape: [
       [0, "I", 0, 0],
@@ -7,7 +7,7 @@ export const TETROMINOS = {
       [0, "I", 0, 0],
       [0, "I", 0, 0]
     ],
-    color: "80, 227, 230"
+    color: "0, 200, 180" // teal
   },
   J: {
     shape: [
@@ -15,7 +15,7 @@ export const TETROMINOS = {
       [0, "J", 0],
       ["J", "J", 0]
     ],
-    color: "36, 95, 223"
+    color: "100, 160, 255" // soft blue
   },
   L: {
     shape: [
@@ -23,14 +23,14 @@ export const TETROMINOS = {
       [0, "L", 0],
       [0, "L", "L"]
     ],
-    color: "223, 173, 36"
+    color: "255, 145, 200" // pink
   },
   O: {
     shape: [
       ["O", "O"],
       ["O", "O"]
     ],
-    color: "223, 217, 36"
+    color: "255, 230, 100" // pale yellow
   },
   S: {
     shape: [
@@ -38,7 +38,7 @@ export const TETROMINOS = {
       ["S", "S", 0],
       [0, 0, 0]
     ],
-    color: "48, 211, 56"
+    color: "120, 255, 140" // mint green
   },
   T: {
     shape: [
@@ -46,7 +46,7 @@ export const TETROMINOS = {
       ["T", "T", "T"],
       [0, "T", 0]
     ],
-    color: "132, 61, 198"
+    color: "170, 120, 255" // lavender/purple
   },
   Z: {
     shape: [
@@ -54,13 +54,27 @@ export const TETROMINOS = {
       [0, "Z", "Z"],
       [0, 0, 0]
     ],
-    color: "227, 78, 78"
+    color: "255, 180, 100" // soft orange/pastel orange — distinct, readable
   }
 };
 
+// ✅ Tiny horizontal nudges per piece to fix centering
+export const SPAWN_OFFSETS = {
+  I: 1,
+  O: 0,
+  T: 0,
+  S: 0,
+  Z: 0,
+  L: 0,
+  J: 1
+};
+
+// ✅ Return both shape & type so offsets work
 export const randomTetromino = () => {
-  const tetrominos = "IJLOSTZ";
-  const randTetromino =
-    tetrominos[Math.floor(Math.random() * tetrominos.length)];
-  return TETROMINOS[randTetromino];
+  const types = "IJLOSTZ";
+  const type = types[Math.floor(Math.random() * types.length)];
+  return {
+    type,          // important!
+    ...TETROMINOS[type]
+  };
 };
