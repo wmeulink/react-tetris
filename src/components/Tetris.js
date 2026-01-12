@@ -25,6 +25,7 @@ const Tetris = () => {
     rowsCleared
   );
 
+  // Move player left/right
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
@@ -46,8 +47,15 @@ const Tetris = () => {
     }
   };
 
+  // Reset stage **in place** to avoid flicker
+  const resetStageInPlace = () => {
+    setStage(prev =>
+      prev.map(row => row.map(() => [0, "clear"]))
+    );
+  };
+
   const startGame = () => {
-    setStage(createStage());
+    resetStageInPlace(); // reset stage in place
     resetPlayer();
     setScore(0);
     setLevel(0);
@@ -76,7 +84,7 @@ const Tetris = () => {
   };
 
   const dropPlayer = () => {
-    setDropTime(null); // temporarily stop auto-drop
+    setDropTime(null);
     drop();
   };
 
@@ -92,7 +100,7 @@ const Tetris = () => {
       onKeyUp={keyUp}
     >
       <StyledTetris>
-        <Stage stage={stage} />
+        <Stage stage={stage} paused={paused} />
         <aside>
           {gameOver && <Display gameOver={gameOver} text="Game Over" />}
           <div>
@@ -101,23 +109,20 @@ const Tetris = () => {
             <Display text={`Level: ${level}`} />
           </div>
 
-          {/* Start / Pause / Resume */}
           <StartButton
             callback={() => {
               if (!gameStarted) startGame(); // first-time start
+              else if (gameOver) startGame(); // restart after game over
               else setPaused(prev => !prev); // toggle pause/resume
             }}
             text={
-              !gameStarted
+              !gameStarted || gameOver
                 ? "Start Game"
                 : paused
                 ? "Resume"
                 : "Pause"
             }
           />
-
-          {/* Always-available restart */}
-          <StartButton callback={startGame} text="Restart" />
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>

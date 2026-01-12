@@ -9,24 +9,21 @@ export const useStage = (player, resetPlayer) => {
     setRowsCleared(0);
 
     const sweepRows = newStage =>
-      newStage.reduce((ack, row) => {
-        if (row.findIndex(cell => cell[0] === 0) === -1) {
+      newStage.reduce((acc, row) => {
+        if (row.every(cell => cell[0] !== 0)) {
           setRowsCleared(prev => prev + 1);
-          ack.unshift(new Array(newStage[0].length).fill([0, "clear"]));
+          acc.unshift(new Array(newStage[0].length).fill([0, "clear"]));
         } else {
-          ack.push(row);
+          acc.push(row);
         }
-        return ack;
+        return acc;
       }, []);
 
     const updateStage = prevStage => {
-      // First flush the stage
+      // Copy previous stage but **keep merged cells intact**
       const newStage = prevStage.map(row =>
         row.map(cell => (cell[1] === "clear" ? [0, "clear"] : cell))
       );
-
-      // Check for collision at spawn
-      let spawnCollision = false;
 
       // Draw the tetromino
       player.tetromino.forEach((row, y) => {
@@ -35,9 +32,8 @@ export const useStage = (player, resetPlayer) => {
             const stageY = y + player.pos.y;
             const stageX = x + player.pos.x;
 
-            if (newStage[stageY] && newStage[stageY][stageX][1] === "merged") {
-              spawnCollision = true;
-            } else {
+            // Only overwrite if it's not already merged
+            if (newStage[stageY] && newStage[stageY][stageX][1] !== "merged") {
               newStage[stageY][stageX] = [
                 value,
                 `${player.collided ? "merged" : "clear"}`
@@ -47,12 +43,7 @@ export const useStage = (player, resetPlayer) => {
         });
       });
 
-      if (spawnCollision) {
-        // Prevent overlap at top
-        return prevStage;
-      }
-
-      // Handle collided piece
+      // Handle collision
       if (player.collided) {
         resetPlayer();
         return sweepRows(newStage);
