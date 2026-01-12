@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { createStage, checkCollision } from "../gameHelpers";
 import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
@@ -17,6 +16,8 @@ import StartButton from "./StartButton";
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
@@ -24,48 +25,49 @@ const Tetris = () => {
     rowsCleared
   );
 
-  console.log("re-render");
-
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
     }
   };
 
+  const move = ({ keyCode }) => {
+    if (!paused && !gameOver) {
+      if (keyCode === 37) movePlayer(-1); // left
+      else if (keyCode === 39) movePlayer(1); // right
+      else if (keyCode === 40) dropPlayer(); // down
+      else if (keyCode === 38) playerRotate(stage, 1); // rotate
+    }
+  };
+
   const keyUp = ({ keyCode }) => {
-    if (!gameOver) {
-      // Activate the interval again when user releases down arrow.
-      if (keyCode === 40) {
-        setDropTime(1000 / (level + 1));
-      }
+    if (!gameOver && keyCode === 40 && !paused) {
+      setDropTime(1000 / (level + 1));
     }
   };
 
   const startGame = () => {
-    // Reset everything
     setStage(createStage());
-    setDropTime(1000);
     resetPlayer();
     setScore(0);
     setLevel(0);
     setRows(0);
     setGameOver(false);
+    setPaused(false);
+    setDropTime(1000);
+    setGameStarted(true);
   };
 
   const drop = () => {
-    // Increase level when player has cleared 10 rows
     if (rows > (level + 1) * 10) {
       setLevel(prev => prev + 1);
-      // Also increase speed
       setDropTime(1000 / (level + 1) + 200);
     }
 
     if (!checkCollision(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
     } else {
-      // Game over!
       if (player.pos.y < 1) {
-        console.log("GAME OVER!!!");
         setGameOver(true);
         setDropTime(null);
       }
@@ -74,52 +76,48 @@ const Tetris = () => {
   };
 
   const dropPlayer = () => {
-    // We don't need to run the interval when we use the arrow down to
-    // move the tetromino downwards. So deactivate it for now.
-    setDropTime(null);
+    setDropTime(null); // temporarily stop auto-drop
     drop();
   };
 
-  // This one starts the game
-  // Custom hook by Dan Abramov
   useInterval(() => {
-    drop();
+    if (!paused && !gameOver) drop();
   }, dropTime);
-
-  const move = ({ keyCode }) => {
-    if (!gameOver) {
-      if (keyCode === 37) {
-        movePlayer(-1);
-      } else if (keyCode === 39) {
-        movePlayer(1);
-      } else if (keyCode === 40) {
-        dropPlayer();
-      } else if (keyCode === 38) {
-        playerRotate(stage, 1);
-      }
-    }
-  };
 
   return (
     <StyledTetrisWrapper
       role="button"
       tabIndex="0"
-      onKeyDown={e => move(e)}
+      onKeyDown={move}
       onKeyUp={keyUp}
     >
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
-          {gameOver ? (
-            <Display gameOver={gameOver} text="Game Over" />
-          ) : (
-            <div>
-              <Display text={`Score: ${score}`} />
-              <Display text={`rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
-            </div>
-          )}
-          <StartButton callback={startGame} />
+          {gameOver && <Display gameOver={gameOver} text="Game Over" />}
+          <div>
+            <Display text={`Score: ${score}`} />
+            <Display text={`Rows: ${rows}`} />
+            <Display text={`Level: ${level}`} />
+          </div>
+
+          {/* Start / Pause / Resume */}
+          <StartButton
+            callback={() => {
+              if (!gameStarted) startGame(); // first-time start
+              else setPaused(prev => !prev); // toggle pause/resume
+            }}
+            text={
+              !gameStarted
+                ? "Start Game"
+                : paused
+                ? "Resume"
+                : "Pause"
+            }
+          />
+
+          {/* Always-available restart */}
+          <StartButton callback={startGame} text="Restart" />
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>
