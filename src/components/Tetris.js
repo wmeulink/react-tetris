@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import './styles/StyledTetris.css';
 import { createStage, checkCollision } from "../gameHelpers";
 import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
