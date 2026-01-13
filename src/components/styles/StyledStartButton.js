@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 export const StyledStartButton = styled.button`
-  box-sizing: border-box;
-  margin: 0 0 20px 0;
-  padding: 20px;
-  min-height: 30px;
-  width: 100%;
-  border-radius: 20px;
+  padding: 8px 16px;
+  min-height: 32px;
+  width: auto;
+  border-radius: 12px;
   border: none;
   color: white;
   background: #333;
@@ -14,4 +12,11 @@ export const StyledStartButton = styled.button`
   font-size: 1rem;
   outline: none;
   cursor: pointer;
+
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
 `;

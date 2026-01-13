@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-// import './styles/StyledTetris.css';
-import { createStage, checkCollision } from "../gameHelpers";
+import { checkCollision } from "../gameHelpers";
 import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
 
-// Custom Hooks
+// Hooks
 import { useInterval } from "../hooks/useInterval";
 import { usePlayer } from "../hooks/usePlayer";
 import { useStage } from "../hooks/useStage";
@@ -13,6 +12,7 @@ import { useGameStatus } from "../hooks/useGameStatus";
 import Stage from "./Stage";
 import Display from "./Display";
 import StartButton from "./StartButton";
+import MobileControls from "./MobileControls";
 
 const Tetris = () => {
   const [dropTime, setDropTime] = useState(null);
@@ -22,51 +22,29 @@ const Tetris = () => {
 
   const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
   const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
-  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(
-    rowsCleared
-  );
+  const [score, setScore, rows, setRows, level, setLevel] =
+    useGameStatus(rowsCleared);
 
-  // Move player left/right
+  /* -------------------- MOVEMENT -------------------- */
   const movePlayer = dir => {
     if (!checkCollision(player, stage, { x: dir, y: 0 })) {
       updatePlayerPos({ x: dir, y: 0 });
     }
   };
 
-  const move = ({ keyCode }) => {
-    if (!paused && !gameOver) {
-      if (keyCode === 37) movePlayer(-1); // left
-      else if (keyCode === 39) movePlayer(1); // right
-      else if (keyCode === 40) dropPlayer(); // down
-      else if (keyCode === 38) playerRotate(stage, 1); // rotate
-    }
+  const moveLeft = () => {
+    if (!paused && !gameOver) movePlayer(-1);
   };
 
-  const keyUp = ({ keyCode }) => {
-    if (!gameOver && keyCode === 40 && !paused) {
-      setDropTime(1000 / (level + 1));
-    }
+  const moveRight = () => {
+    if (!paused && !gameOver) movePlayer(1);
   };
 
-  // Reset stage **in place** to avoid flicker
-  const resetStageInPlace = () => {
-    setStage(prev =>
-      prev.map(row => row.map(() => [0, "clear"]))
-    );
+  const rotate = () => {
+    if (!paused && !gameOver) playerRotate(stage, 1);
   };
 
-  const startGame = () => {
-    resetStageInPlace(); // reset stage in place
-    resetPlayer();
-    setScore(0);
-    setLevel(0);
-    setRows(0);
-    setGameOver(false);
-    setPaused(false);
-    setDropTime(1000);
-    setGameStarted(true);
-  };
-
+  // Automatic drop from interval
   const drop = () => {
     if (rows > (level + 1) * 10) {
       setLevel(prev => prev + 1);
@@ -84,27 +62,74 @@ const Tetris = () => {
     }
   };
 
-  const dropPlayer = () => {
-    setDropTime(null);
-    drop();
+  // Manual single-step drop (mobile button or key press)
+  const softDrop = () => {
+    if (!paused && !gameOver && !checkCollision(player, stage, { x: 0, y: 1 })) {
+      updatePlayerPos({ x: 0, y: 1, collided: false });
+    }
+  };
+
+  /* -------------------- KEYBOARD -------------------- */
+  const handleKeyDown = ({ keyCode }) => {
+    if (paused || gameOver) return;
+
+    if (keyCode === 37) moveLeft();      // ←
+    else if (keyCode === 39) moveRight(); // →
+    else if (keyCode === 40) softDrop();  // ↓
+    else if (keyCode === 38) rotate();    // ↑
+  };
+
+  const handleKeyUp = ({ keyCode }) => {
+    if (!gameOver && keyCode === 40 && !paused) {
+      setDropTime(1000 / (level + 1)); // resume interval after manual drop
+    }
+  };
+
+  /* -------------------- GAME FLOW -------------------- */
+  const resetStageInPlace = () => {
+    setStage(prev => prev.map(row => row.map(() => [0, "clear"])));
+  };
+
+  const startGame = () => {
+    resetStageInPlace();
+    resetPlayer();
+    setScore(0);
+    setLevel(0);
+    setRows(0);
+    setGameOver(false);
+    setPaused(false);
+    setDropTime(1000);
+    setGameStarted(true);
   };
 
   useInterval(() => {
     if (!paused && !gameOver) drop();
   }, dropTime);
 
+  /* -------------------- RENDER -------------------- */
   return (
     <StyledTetrisWrapper
       role="button"
       tabIndex="0"
-      onKeyDown={move}
-      onKeyUp={keyUp}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
     >
       <StyledTetris>
+        {/* Stage */}
         <Stage stage={stage} paused={paused} />
+
+        {/* HUD / Aside */}
         <aside>
-          {gameOver && <Display gameOver={gameOver} text="Game Over" />}
-          <div>
+          {gameOver && <Display gameOver text="Game Over" />}
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              marginBottom: "12px",
+            }}
+          >
             <Display text={`Score: ${score}`} />
             <Display text={`Rows: ${rows}`} />
             <Display text={`Level: ${level}`} />
@@ -112,19 +137,20 @@ const Tetris = () => {
 
           <StartButton
             callback={() => {
-              if (!gameStarted) startGame(); // first-time start
-              else if (gameOver) startGame(); // restart after game over
-              else setPaused(prev => !prev); // toggle pause/resume
+              if (!gameStarted || gameOver) startGame();
+              else setPaused(prev => !prev);
             }}
-            text={
-              !gameStarted || gameOver
-                ? "Start Game"
-                : paused
-                ? "Resume"
-                : "Pause"
-            }
+            text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
           />
         </aside>
+
+        {/* Mobile Controls */}
+        <MobileControls
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          drop={softDrop} // <--- manual drop, does NOT stop auto-drop
+          rotate={rotate}
+        />
       </StyledTetris>
     </StyledTetrisWrapper>
   );
