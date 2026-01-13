@@ -1,0 +1,39 @@
+/* ---------------- STAGE WRAPPER ---------------- */
+.stage-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px; /* spacing for mobile controls */
+}
+
+/* ---------------- STAGE ---------------- */
+.stage {
+  display: grid;
+  grid-template-columns: repeat(10, 24px);
+  grid-template-rows: repeat(20, 24px);
+  width: 100%;
+  max-width: 400px;
+  background: #111;
+  gap: 0;
+  image-rendering: pixelated;
+}
+
+/* ---------------- DESKTOP OVERRIDES ---------------- */
+@media (min-width: 769px) {
+  .stage {
+    grid-template-rows: repeat(25, 24px); /* taller stage */
+    height: 600px;
+  }
+}
+
+/* ---------------- MOBILE OVERRIDES ---------------- */
+@media (max-width: 768px) {
+  .stage {
+    width: 90vw;          /* nearly full width */
+    max-width: 360px;     /* prevent it from being too wide */
+    height: auto;         /* maintain aspect ratio */
+    max-height: 50vh;     /* limit height to half the screen */
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { checkCollision } from "../gameHelpers";
 import { StyledTetrisWrapper, StyledTetris, StageWrapper } from "./styles/StyledTetris";
+import './styles/Tetris.css';
 
 // Hooks
 import { useInterval } from "../hooks/useInterval";
@@ -100,38 +101,26 @@ const Tetris = () => {
 
   /* -------------------- RENDER -------------------- */
   return (
-  <StyledTetrisWrapper
-  role="button"
-  tabIndex="0"
-  onKeyDown={handleKeyDown}
-  onKeyUp={handleKeyUp}
->
-  <StyledTetris>
-    {/* Stage */}
-    <StageWrapper>
-      <Stage stage={stage} paused={paused} />
-    </StageWrapper>
+<div className="tetris-wrapper" tabIndex="0" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
+  <div className="tetris">
+    <div className="stage-wrapper">
+      <div className="stage">
+        <Stage stage={stage} paused={paused} />
+      </div>
+    </div>
 
-    {/* Mobile controls */}
     <MobileControls
       moveLeft={moveLeft}
       moveRight={moveRight}
       drop={softDrop}
       rotate={rotatePiece}
+      className="mobile-controls"
     />
 
-    {/* Aside / HUD + Start Button */}
     <aside>
       {gameOver && <Display gameOver text="Game Over" />}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          marginBottom: "12px",
-        }}
-      >
+      <div className="aside-div">
         <Display text={`Score: ${score}`} />
         <Display text={`Rows: ${rows}`} />
         <Display text={`Level: ${level}`} />
@@ -145,8 +134,8 @@ const Tetris = () => {
         text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
       />
     </aside>
-  </StyledTetris>
-</StyledTetrisWrapper>
+  </div>
+</div>
 
   );
 };

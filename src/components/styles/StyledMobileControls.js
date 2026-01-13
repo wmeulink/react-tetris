@@ -4,7 +4,9 @@ export const StyledMobileControls = styled.div`
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 16px;
+  // margin-top: 16px;
+  // border:2px solid red;
+  margin-bottom:16px;
 
   @media (min-width: 769px) {
     display: none;
@@ -13,7 +15,6 @@ export const StyledMobileControls = styled.div`
     padding: 0;
   }
 `;
-
 
 export const ControlButton = styled.button`
   width: 56px;

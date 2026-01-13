@@ -1,19 +1,14 @@
 import React from "react";
-import { StyledMobileControls, ControlButton } from "./styles/StyledMobileControls";
+import "./styles/MobileControls.css";
 
-const MobileControls = ({
-  moveLeft,
-  moveRight,
-  drop,
-  rotate
-}) => {
+const MobileControls = ({ moveLeft, moveRight, drop, rotate }) => {
   return (
-    <StyledMobileControls>
-      <ControlButton onClick={moveLeft}>◀</ControlButton>
-      <ControlButton onClick={rotate}>⟳</ControlButton>
-      <ControlButton onClick={moveRight}>▶</ControlButton>
-      <ControlButton onClick={drop}>▼</ControlButton>
-    </StyledMobileControls>
+    <div className="mobile-controls">
+      <button onClick={moveLeft}>◀</button>
+      <button onClick={rotate}>⟳</button>
+      <button onClick={moveRight}>▶</button>
+      <button onClick={drop}>▼</button>
+    </div>
   );
 };
 

@@ -1,0 +1,33 @@
+/* MobileControls.css */
+.mobile-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.mobile-controls button {
+  width: 56px;
+  height: 56px;
+  font-size: 20px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  border: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.mobile-controls button:active {
+  transform: scale(0.95);
+}
+
+/* Hide mobile controls on desktop */
+@media (min-width: 769px) {
+  .mobile-controls {
+    display: none;
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -1,8 +1,13 @@
 import React from "react";
-import { StyledDisplay } from "./styles/StyledDisplay";
+import "./styles/Display.css";
 
 const Display = ({ gameOver, text }) => (
-  <StyledDisplay gameOver={gameOver}>{text}</StyledDisplay>
+  <div
+    className="display"
+    style={{ color: gameOver ? "red" : "#999" }}
+  >
+    {text}
+  </div>
 );
 
 export default Display;
