@@ -6,11 +6,14 @@ export const StyledMobileControls = styled.div`
   gap: 12px;
   margin-top: 16px;
 
-  /* keep mobile-only display */
   @media (min-width: 769px) {
     display: none;
+    height: 0;
+    margin: 0;
+    padding: 0;
   }
 `;
+
 
 export const ControlButton = styled.button`
   width: 56px;

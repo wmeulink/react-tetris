@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { checkCollision } from "../gameHelpers";
-import { StyledTetrisWrapper, StyledTetris } from "./styles/StyledTetris";
+import { StyledTetrisWrapper, StyledTetris, StageWrapper } from "./styles/StyledTetris";
 
 // Hooks
 import { useInterval } from "../hooks/useInterval";
@@ -32,17 +32,9 @@ const Tetris = () => {
     }
   };
 
-  const moveLeft = () => {
-    if (!paused && !gameOver) movePlayer(-1);
-  };
-
-  const moveRight = () => {
-    if (!paused && !gameOver) movePlayer(1);
-  };
-
-  const rotate = () => {
-    if (!paused && !gameOver) playerRotate(stage, 1);
-  };
+  const moveLeft = () => { if (!paused && !gameOver) movePlayer(-1); };
+  const moveRight = () => { if (!paused && !gameOver) movePlayer(1); };
+  const rotatePiece = () => { if (!paused && !gameOver) playerRotate(stage, 1); };
 
   // Automatic drop from interval
   const drop = () => {
@@ -62,7 +54,7 @@ const Tetris = () => {
     }
   };
 
-  // Manual single-step drop (mobile button or key press)
+  // Manual single-step drop (mobile button or arrow down)
   const softDrop = () => {
     if (!paused && !gameOver && !checkCollision(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
@@ -73,10 +65,10 @@ const Tetris = () => {
   const handleKeyDown = ({ keyCode }) => {
     if (paused || gameOver) return;
 
-    if (keyCode === 37) moveLeft();      // ←
-    else if (keyCode === 39) moveRight(); // →
-    else if (keyCode === 40) softDrop();  // ↓
-    else if (keyCode === 38) rotate();    // ↑
+    if (keyCode === 37) moveLeft();
+    else if (keyCode === 39) moveRight();
+    else if (keyCode === 40) softDrop();
+    else if (keyCode === 38) rotatePiece();
   };
 
   const handleKeyUp = ({ keyCode }) => {
@@ -108,51 +100,54 @@ const Tetris = () => {
 
   /* -------------------- RENDER -------------------- */
   return (
-    <StyledTetrisWrapper
-      role="button"
-      tabIndex="0"
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-    >
-      <StyledTetris>
-        {/* Stage */}
-        <Stage stage={stage} paused={paused} />
+  <StyledTetrisWrapper
+  role="button"
+  tabIndex="0"
+  onKeyDown={handleKeyDown}
+  onKeyUp={handleKeyUp}
+>
+  <StyledTetris>
+    {/* Stage */}
+    <StageWrapper>
+      <Stage stage={stage} paused={paused} />
+    </StageWrapper>
 
-        {/* HUD / Aside */}
-        <aside>
-          {gameOver && <Display gameOver text="Game Over" />}
+    {/* Mobile controls */}
+    <MobileControls
+      moveLeft={moveLeft}
+      moveRight={moveRight}
+      drop={softDrop}
+      rotate={rotatePiece}
+    />
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              marginBottom: "12px",
-            }}
-          >
-            <Display text={`Score: ${score}`} />
-            <Display text={`Rows: ${rows}`} />
-            <Display text={`Level: ${level}`} />
-          </div>
+    {/* Aside / HUD + Start Button */}
+    <aside>
+      {gameOver && <Display gameOver text="Game Over" />}
 
-          <StartButton
-            callback={() => {
-              if (!gameStarted || gameOver) startGame();
-              else setPaused(prev => !prev);
-            }}
-            text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
-          />
-        </aside>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+          marginBottom: "12px",
+        }}
+      >
+        <Display text={`Score: ${score}`} />
+        <Display text={`Rows: ${rows}`} />
+        <Display text={`Level: ${level}`} />
+      </div>
 
-        {/* Mobile Controls */}
-        <MobileControls
-          moveLeft={moveLeft}
-          moveRight={moveRight}
-          drop={softDrop} // <--- manual drop, does NOT stop auto-drop
-          rotate={rotate}
-        />
-      </StyledTetris>
-    </StyledTetrisWrapper>
+      <StartButton
+        callback={() => {
+          if (!gameStarted || gameOver) startGame();
+          else setPaused(prev => !prev);
+        }}
+        text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
+      />
+    </aside>
+  </StyledTetris>
+</StyledTetrisWrapper>
+
   );
 };
 

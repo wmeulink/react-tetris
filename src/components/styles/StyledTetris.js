@@ -1,21 +1,28 @@
 import styled from "styled-components";
 
+/* -------------------- WRAPPER -------------------- */
 export const StyledTetrisWrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  min-height: 100vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding-top: 16px;
+  }
 `;
 
+/* -------------------- MAIN LAYOUT -------------------- */
 export const StyledTetris = styled.div`
   display: flex;
-  gap: 16px;
-  margin-top: 16px;
-  max-width: 900px;
   width: 100%;
+  max-width: 900px;
+  gap: 16px;
+  align-items: stretch; /* <-- important! stretch stage to max height */
 
   aside {
     display: flex;
@@ -23,32 +30,48 @@ export const StyledTetris = styled.div`
     align-items: center;
     gap: 12px;
     width: 200px;
-    flex-shrink: 0;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
   }
 
-  /* MOBILE */
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 
     aside {
-  flex-direction: column; /* stack vertically overall */
-  align-items: center;
-  gap: 8px;
-  width: 90%;
-  max-width: 320px;
-  padding: 0;
+      width: 90%;
+      max-width: 320px;
+      padding: 0;
+      gap: 8px;
 
-  div {
-    /* This div contains Score / Rows / Level */
-    display: flex;
-    flex-direction: row; /* put them in a row */
-    justify-content: space-between;
-    width: 100%;
-    gap: 8px;
-  }
-}
-
+      div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
   }
 `;
+/* -------------------- WRAPPER -------------------- */
+export const StageWrapper = styled.div`
+  width: 100%;
+  max-width: 400px;
+
+  /* Desktop stage height */
+  height: 600px;
+
+  @media (max-width: 768px) {
+    height: 50vh; /* mobile: half viewport */
+    max-width: 320px;
+  }
+`;
+
+
+
