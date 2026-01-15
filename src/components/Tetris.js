@@ -129,10 +129,10 @@ const Tetris = () => {
           {gameOver && <Display gameOver text="Game Over" />}
 
           <div className="aside-div">
-            <Display text={`Score: ${score}`} />
-            <Display text={`Rows: ${rows}`} />
-            <Display text={`Level: ${level}`} />
-          </div>
+  <Display className="display-text" text={`Score: ${score}`} />
+  <Display className="display-text" text={`Rows: ${rows}`} />
+  <Display className="display-text" text={`Level: ${level}`} />
+</div>
 
           <StartButton
             callback={() => {
