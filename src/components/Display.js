@@ -1,12 +1,12 @@
 import React from "react";
 import "./styles/Display.css";
 
-const Display = ({ gameOver, text }) => (
+const Display = ({ gameOver, text, children }) => (
   <div
     className="display"
-    style={{ color: gameOver ? "red" : "#999" }}
+    style={{ color: gameOver ? "red" : "#fff" }} // white text for normal
   >
-    {text}
+    {children || text} {/* render children if provided, otherwise fallback to text */}
   </div>
 );
 

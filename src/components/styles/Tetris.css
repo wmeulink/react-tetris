@@ -32,21 +32,22 @@
   padding-top: 5px;
 }
 
-/* Container for Score / Rows / Level */
+/* ---------------- STATS (Score / Rows / Level) ---------------- */
 .tetris aside .aside-div {
   display: flex;
-  flex-direction: column; /* stack vertically on desktop */
+  flex-direction: column; /* stacked vertically on desktop */
   gap: 10px;
   width: 100%;
 }
 
-/* Individual stat (Score, Rows, Level) */
 .tetris aside .aside-div span {
   display: flex;
   justify-content: space-between; /* label left, number right */
-  white-space: nowrap;            /* prevent line breaks */
+  align-items: center;            /* vertically center */
+  white-space: nowrap;            /* prevent wrapping */
   overflow: hidden;
   text-overflow: ellipsis;        /* handles very large numbers */
+  width: 100%;                    /* ensure flex spacing works */
   font-size: 16px;
 }
 
@@ -73,9 +74,10 @@
   }
 
   .tetris aside .aside-div {
-    flex-direction: row;       /* label+number side-by-side */
+    flex-direction: row;           /* side-by-side on small screens */
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;             /* prevent wrapping */
   }
 }
 
@@ -100,8 +102,34 @@
   }
 
   .tetris aside .aside-div {
-    flex-direction: row;       /* same side-by-side behavior for tablets */
+    flex-direction: row;           /* side-by-side on tablets */
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;             /* prevent wrapping */
   }
+  
 }
+
+.tetris aside .aside-div .display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tetris aside .aside-div .display .label {
+  flex-shrink: 0; /* label never shrinks */
+  margin-right: 6px; /* optional spacing */
+}
+
+.tetris aside .aside-div .display .value {
+  flex-shrink: 1;   /* value can shrink if needed */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+
