@@ -1,4 +1,4 @@
-/* MobileControls.css */
+/* ---------------- MOBILE CONTROLS ---------------- */
 .mobile-controls {
   display: flex;
   justify-content: center;
@@ -16,6 +16,7 @@
   border: none;
   touch-action: manipulation;
   cursor: pointer;
+  transition: transform 0.1s ease-in-out;
 }
 
 .mobile-controls button:active {
@@ -29,5 +30,20 @@
     height: 0;
     margin: 0;
     padding: 0;
+  }
+}
+
+/* MOBILE SCALING */
+@media (max-width: 540px) {
+  .mobile-controls {
+    transform: scale(0.85);
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-controls {
+    transform: scale(0.8);
+    margin-bottom: 10px;
   }
 }

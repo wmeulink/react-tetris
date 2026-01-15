@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 
 import { TETROMINOS, randomTetromino, SPAWN_OFFSETS } from "../tetrominos";
-import { STAGE_WIDTH, checkCollision } from "../gameHelpers";
+import { checkCollision } from "../gameHelpers";
 
-export const usePlayer = () => {
+export const usePlayer = (stageWidth) => {
   const [player, setPlayer] = useState({
     pos: { x: 0, y: 0 },
     tetromino: TETROMINOS[0].shape,
@@ -51,16 +51,14 @@ const resetPlayer = useCallback(() => {
   setPlayer({
     pos: {
       x:
-        Math.floor((STAGE_WIDTH - shape[0].length) / 2) +
+        Math.floor((stageWidth - shape[0].length) / 2) +
         (SPAWN_OFFSETS[tetromino.type] ?? 0),
       y: 0
     },
     tetromino: shape,
     collided: false
   });
-
-  console.log("Spawned:", tetromino.type, "Offset:", SPAWN_OFFSETS[tetromino.type]);
-}, []);
+}, [stageWidth]);
 
   return [player, updatePlayerPos, resetPlayer, playerRotate];
 };

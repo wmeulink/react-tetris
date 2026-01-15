@@ -6,27 +6,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 30px;      /* desktop top padding */
-  padding-bottom: 40px;   /* extra bottom padding for mobile buttons */
+  padding-top: 30px;
+  padding-bottom: 40px;
   box-sizing: border-box;
   overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .tetris-wrapper {
-    padding-top: 16px;
-  }
 }
 
 /* ---------------- TETRIS ---------------- */
 .tetris {
   display: flex;
-  flex-direction: row;       /* stage + HUD side by side on desktop */
+  flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  width: 35%;                /* controls spacing between stage and aside */
-  max-width: 900px;
-  gap: 10px;
+  width: 100%;
+  gap: 26px;
 }
 
 .tetris aside {
@@ -34,25 +27,58 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding-top: 5px;
   width: 200px;
-  margin-left: 8px;          /* bring aside closer on desktop */
+  padding-top: 5px;
 }
 
 .tetris aside .aside-div {
   display: flex;
-  flex-direction: column;    /* stack score/rows/level on desktop */
+  flex-direction: column;
   gap: 10px;
   width: 100%;
 }
 
-/* ---------------- MOBILE ---------------- */
-@media (max-width: 768px) {
+/* ---------------- MOBILE & TABLET ---------------- */
+@media (max-width: 540px) {
+  .tetris-wrapper {
+    min-height: auto;
+    height: 100vh;
+    overflow: hidden;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
   .tetris {
-    flex-direction: column;  /* stack stage + mobile buttons + HUD */
+    flex-direction: column;
     align-items: center;
-    width: 100%;
     gap: 12px;
+  }
+
+  .tetris aside {
+    width: 90%;
+    max-width: 280px;
+    padding: 0;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .tetris aside .aside-div {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+@media (min-width: 541px) and (max-width: 768px) {
+  .tetris-wrapper {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .tetris {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
   }
 
   .tetris aside {
@@ -60,37 +86,26 @@
     max-width: 320px;
     padding: 0;
     gap: 8px;
-    margin-top: 20px;       /* space between stage and aside */
+    margin-top: 16px;
   }
 
-  /* Score row horizontal on mobile */
   .tetris aside .aside-div {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    width: 100%;
   }
 }
 
-/* ---------------- MOBILE CONTROLS ---------------- */
-.mobile-controls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 16px 0;
+/* MOBILE: small phones */
+@media (max-width: 540px) {
+  .tetris-wrapper {
+    min-height: 100vh;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
 }
 
-.mobile-controls button {
-  width: 56px;
-  height: 56px;
-  font-size: 20px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.65);
-  color: white;
-  border: none;
-  touch-action: manipulation;
-}
-
-.mobile-controls button:active {
-  transform: scale(0.95);
-}

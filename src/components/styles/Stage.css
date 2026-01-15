@@ -1,9 +1,8 @@
 /* ---------------- STAGE WRAPPER ---------------- */
 .stage-wrapper {
-  width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 12px; /* spacing for mobile controls */
+  transform-origin: top center;
 }
 
 /* ---------------- STAGE ---------------- */
@@ -11,29 +10,41 @@
   display: grid;
   grid-template-columns: repeat(10, 24px);
   grid-template-rows: repeat(20, 24px);
-  width: 100%;
-  max-width: 400px;
   background: #111;
-  gap: 0;
   image-rendering: pixelated;
 }
 
-/* ---------------- DESKTOP OVERRIDES ---------------- */
-@media (min-width: 769px) {
+/* TABLET */
+@media (min-width: 769px) and (max-width: 1023px) {
   .stage {
-    grid-template-rows: repeat(25, 24px); /* taller stage */
-    height: 600px;
+    grid-template-columns: repeat(14, 24px); /* slightly wider than mobile */
+    grid-template-rows: repeat(35, 24px);
   }
 }
 
-/* ---------------- MOBILE OVERRIDES ---------------- */
-@media (max-width: 768px) {
+/* DESKTOP */
+@media (min-width: 1024px) {
   .stage {
-    width: 90vw;          /* nearly full width */
-    max-width: 360px;     /* prevent it from being too wide */
-    height: auto;         /* maintain aspect ratio */
-    max-height: 50vh;     /* limit height to half the screen */
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(20, 1fr);
+    grid-template-columns: repeat(14, 24px);
+    grid-template-rows: repeat(25, 24px);
+  }
+}
+
+/* MOBILE SCALING */
+@media (max-width: 768px) {
+  .stage-wrapper {
+    transform: scale(0.9); /* shrink stage slightly to fit smaller phones */
+  }
+}
+
+@media (max-width: 540px) {
+  .stage-wrapper {
+    transform: scale(0.85); /* shrink more for very small phones */
+  }
+}
+
+@media (max-width: 360px) {
+  .stage-wrapper {
+    transform: scale(0.8); /* tiny phones */
   }
 }

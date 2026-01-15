@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { checkCollision } from "../gameHelpers";
-import { StyledTetrisWrapper, StyledTetris, StageWrapper } from "./styles/StyledTetris";
+import React, { useState, useEffect } from "react";
+import { checkCollision, createStage, getDynamicUISpace, getStageDimensions } from "../gameHelpers";
 import './styles/Tetris.css';
 
 // Hooks
@@ -21,10 +20,14 @@ const Tetris = () => {
   const [paused, setPaused] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer();
-  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer);
-  const [score, setScore, rows, setRows, level, setLevel] =
-    useGameStatus(rowsCleared);
+  const { width } = getStageDimensions();
+  const [player, updatePlayerPos, resetPlayer, playerRotate] = usePlayer(width);
+
+  const initialStage = createStage();
+  const [stage, setStage, rowsCleared] = useStage(player, resetPlayer, initialStage);
+  const [score, setScore, rows, setRows, level, setLevel] = useGameStatus(rowsCleared);
+
+  const uiSpace = getDynamicUISpace();
 
   /* -------------------- MOVEMENT -------------------- */
   const movePlayer = dir => {
@@ -37,7 +40,17 @@ const Tetris = () => {
   const moveRight = () => { if (!paused && !gameOver) movePlayer(1); };
   const rotatePiece = () => { if (!paused && !gameOver) playerRotate(stage, 1); };
 
-  // Automatic drop from interval
+  /* -------------------- RESIZE -------------------- */
+  useEffect(() => {
+    const handleResize = () => {
+      setStage(createStage());
+      resetPlayer(getStageDimensions().width);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [resetPlayer, setStage]);
+
+  /* -------------------- DROP -------------------- */
   const drop = () => {
     if (rows > (level + 1) * 10) {
       setLevel(prev => prev + 1);
@@ -55,7 +68,6 @@ const Tetris = () => {
     }
   };
 
-  // Manual single-step drop (mobile button or arrow down)
   const softDrop = () => {
     if (!paused && !gameOver && !checkCollision(player, stage, { x: 0, y: 1 })) {
       updatePlayerPos({ x: 0, y: 1, collided: false });
@@ -65,7 +77,6 @@ const Tetris = () => {
   /* -------------------- KEYBOARD -------------------- */
   const handleKeyDown = ({ keyCode }) => {
     if (paused || gameOver) return;
-
     if (keyCode === 37) moveLeft();
     else if (keyCode === 39) moveRight();
     else if (keyCode === 40) softDrop();
@@ -74,7 +85,7 @@ const Tetris = () => {
 
   const handleKeyUp = ({ keyCode }) => {
     if (!gameOver && keyCode === 40 && !paused) {
-      setDropTime(1000 / (level + 1)); // resume interval after manual drop
+      setDropTime(1000 / (level + 1));
     }
   };
 
@@ -84,8 +95,9 @@ const Tetris = () => {
   };
 
   const startGame = () => {
-    resetStageInPlace();
-    resetPlayer();
+    const newStage = createStage();
+    setStage(newStage);
+    resetPlayer(getStageDimensions().width);
     setScore(0);
     setLevel(0);
     setRows(0);
@@ -101,42 +113,37 @@ const Tetris = () => {
 
   /* -------------------- RENDER -------------------- */
   return (
-<div className="tetris-wrapper" tabIndex="0" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
-  <div className="tetris">
-    <div className="stage-wrapper">
-      <div className="stage">
-        <Stage stage={stage} paused={paused} />
+    <div className="tetris-wrapper" tabIndex="0" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
+      <div className="tetris">
+        <Stage stage={stage} paused={paused} uiSpace={uiSpace} />
+
+        <MobileControls
+          moveLeft={moveLeft}
+          moveRight={moveRight}
+          drop={softDrop}
+          rotate={rotatePiece}
+          className="mobile-controls"
+        />
+
+        <aside>
+          {gameOver && <Display gameOver text="Game Over" />}
+
+          <div className="aside-div">
+            <Display text={`Score: ${score}`} />
+            <Display text={`Rows: ${rows}`} />
+            <Display text={`Level: ${level}`} />
+          </div>
+
+          <StartButton
+            callback={() => {
+              if (!gameStarted || gameOver) startGame();
+              else setPaused(prev => !prev);
+            }}
+            text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
+          />
+        </aside>
       </div>
     </div>
-
-    <MobileControls
-      moveLeft={moveLeft}
-      moveRight={moveRight}
-      drop={softDrop}
-      rotate={rotatePiece}
-      className="mobile-controls"
-    />
-
-    <aside>
-      {gameOver && <Display gameOver text="Game Over" />}
-
-      <div className="aside-div">
-        <Display text={`Score: ${score}`} />
-        <Display text={`Rows: ${rows}`} />
-        <Display text={`Level: ${level}`} />
-      </div>
-
-      <StartButton
-        callback={() => {
-          if (!gameStarted || gameOver) startGame();
-          else setPaused(prev => !prev);
-        }}
-        text={!gameStarted || gameOver ? "Start Game" : paused ? "Resume" : "Pause"}
-      />
-    </aside>
-  </div>
-</div>
-
   );
 };
 
