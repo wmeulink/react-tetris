@@ -8,7 +8,7 @@ This is an independently developed project that demonstrates frontend systems th
 
 ---
 
-## 🚀 Overview
+## Overview
 
 This project is a fully playable Tetris game implemented as a web application. Instead of treating it as a simple UI demo, the focus was on:
 
@@ -22,7 +22,7 @@ It’s designed both as an interactive experience and as a showcase of frontend 
 
 ---
 
-## 🧠 Core Architecture Highlights
+## Core Architecture Highlights
 
 ### 🎮 Game Loop & State Modeling
 
@@ -35,7 +35,7 @@ This project structures the game loop and updates in a predictable way:
 
 ---
 
-## 📐 Dynamic Grid & Layout Logic
+## Dynamic Grid & Layout Logic
 
 Rather than only styling for responsiveness, grid calculations are performed at runtime based on viewport constraints:
 
@@ -51,7 +51,7 @@ This keeps gameplay consistent and visually coherent across screen sizes.
 
 ---
 
-## ⚙️ Deployment
+## Deployment
 
 The live application is deployed in production. Deployment steps included:
 
@@ -63,7 +63,7 @@ The live application is deployed in production. Deployment steps included:
 
 ---
 
-## 🧩 Tech Stack
+## Tech Stack
 
 | Category | Technologies |
 |----------|--------------|
