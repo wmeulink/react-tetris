@@ -1,72 +1,73 @@
-### Tetris App
+# Classic Tetris (React + TypeScript)
 
-This Application is a Tetris game for desktop only.
+**Live Demo:** https://classic-tetris.com
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A production-deployed Tetris application built with React and TypeScript that emphasizes intentional state modeling, runtime layout computation, and performance conscious design.
 
-## Available Scripts
+This is an independently developed project that demonstrates frontend systems thinking, real-time interaction logic, responsive layout mathematics, and deployment from end to end.
 
-In the project directory, you can run:
+---
 
-### `yarn start`
+## 🚀 Overview
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project is a fully playable Tetris game implemented as a web application. Instead of treating it as a simple UI demo, the focus was on:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- **Deterministic game state modeling**
+- **Decoupling game logic from rendering**
+- **Dynamic grid layout based on viewport**
+- **Efficient real-time updates and performance considerations**
+- **Full deployment and infrastructure setup**
 
-### `yarn test`
+It’s designed both as an interactive experience and as a showcase of frontend architecture.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `yarn build`
+## 🧠 Core Architecture Highlights
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🎮 Game Loop & State Modeling
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+This project structures the game loop and updates in a predictable way:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Movement, rotation, and collision detection logic run independently of rendering
+- Game state (stage matrix, active tetromino, score, level, etc.) is modeled to avoid tight coupling with UI
+- Collision checks short-circuit early when possible to reduce computational overhead
+- State transitions are explicit and testable
 
-### `yarn eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 📐 Dynamic Grid & Layout Logic
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Rather than only styling for responsiveness, grid calculations are performed at runtime based on viewport constraints:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Dynamically compute stage width, height, and block size
+- Maintain aspect ratio while preserving usable UI space
+- Adjust layout across breakpoints
+- Utilities include:
+  - `getStageDimensions`
+  - `getBlockSize`
+  - `getStageScale`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This keeps gameplay consistent and visually coherent across screen sizes.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ⚙️ Deployment
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The live application is deployed in production. Deployment steps included:
 
-### Code Splitting
+- Building optimized production bundles
+- Provisioning a DigitalOcean server
+- Nginx configuration for static assets and HTTPS
+- DNS setup
+- Continuous availability via HTTPS
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+---
 
-### Analyzing the Bundle Size
+## 🧩 Tech Stack
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+| Category | Technologies |
+|----------|--------------|
+| UI | React |
+| Rendering & Logic | Custom game loop, dynamic layout math |
+| Deployment | DigitalOcean, Nginx, HTTPS |
+| Build & Tooling | Vite, TypeScript, ESLint, Prettier |
